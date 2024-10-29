@@ -5,13 +5,12 @@ import java.util.Scanner;
 public class CatCommand implements CommandInterface 
 {
     @Override 
-    public void execute(String... args) 
+    public String execute(String... args)
     {
         // case no arguments specified 
         if (args.length == 0) 
         {
-            System.out.println("Please specify at least one file.");
-            return;
+            return "Please specify at least one file. \n";
         }
 
         for (String fileName : args) 
@@ -20,27 +19,30 @@ public class CatCommand implements CommandInterface
 
             // case no file not found  
             if (!file.exists()) 
-                System.out.println("cat: " + fileName + ": No such file or directory");
+                return "cat: " + fileName + ": No such file or directory";
             
             else if (!file.isFile())
-                System.out.println("cat: " + fileName + ": is a directory, not a file");
+                return "cat: " + fileName + ": is a directory, not a file";
             
             else 
             {
                 // trying to read the file content
                 try (Scanner scanner = new Scanner(file))
                 {
+                    String str=null;
                     while (scanner.hasNextLine()) 
                     {
-                        System.out.println(scanner.nextLine());
+                        str+= scanner.nextLine()+"\n";
                     }
+                    return str;
                 } 
                 
                 catch (FileNotFoundException e) 
                 {
-                    System.out.println("cat: " + fileName + ": Unable to read the file");
+                    return "cat: " + fileName + ": Unable to read the file";
                 } 
             }
         }
+        return null;
     }
 }

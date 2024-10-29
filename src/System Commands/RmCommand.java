@@ -1,8 +1,8 @@
 public class RmCommand implements CommandInterface{
     @Override 
-    public void execute(String... args) {
-    
-    }
+    public String execute(String... args) {
+        return null;
+}
 }
 
 

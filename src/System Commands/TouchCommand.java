@@ -1,6 +1,6 @@
 public class TouchCommand implements CommandInterface{
     @Override 
-    public void execute(String... args) {
-    
-    }
+    public String execute(String... args) {
+        return null;
+}
 }

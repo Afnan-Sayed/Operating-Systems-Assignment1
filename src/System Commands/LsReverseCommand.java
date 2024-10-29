@@ -1,7 +1,7 @@
 import java.io.File;
 import java.util.Arrays;
 import java.util.Comparator;
-    public class LsAllCommand implements LsInterface {
+    public class LsReverseCommand implements LsInterface{
     
      @Override
      public String execute() {
@@ -12,7 +12,7 @@ import java.util.Comparator;
             return "error";
             
         }
-          Arrays.sort(files,Comparator.comparing(File :: getName));
+Arrays.sort(files, Comparator.comparing(File::getName).reversed());
         for(File file:files){
             
                 result.append(file.getName()).append(file.isDirectory() ? "/" : "").append(" ");
@@ -21,6 +21,3 @@ import java.util.Comparator;
        return result.toString();
 }
 }
-
-
-
