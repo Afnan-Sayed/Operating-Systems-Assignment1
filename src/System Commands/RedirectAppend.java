@@ -3,7 +3,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
 
-public class RedirectAppend implements RedirectionInterface 
+public class RedirectAppend extends RedirectionAbstract implements RedirectionInterface 
 {
     @Override
     public void redirectOutput(String commandOutput, String fileName) 
@@ -11,17 +11,16 @@ public class RedirectAppend implements RedirectionInterface
         //case: no argument specified
         if (fileName == null || fileName.trim().isEmpty()) 
         {
-            System.out.println("Syntax Error: File name is required");
-            return;
+            NoFileArgumentCase();
         }
         
+        //case: not a file
         else 
         {
             File file = new File(fileName);
             if (!file.isFile())
             {
-                System.out.println(fileName+ "is a directory");
-                return;
+                NotFileCase(fileName);
             }
             
             else if (commandOutput.equals("cat")) 
@@ -33,7 +32,8 @@ public class RedirectAppend implements RedirectionInterface
                      FileWriter writer = new FileWriter(file, true))
                 {
                     String line;
-                    while (!(line = scanner.nextLine()).equalsIgnoreCase("stop")) {
+                    while (!(line = scanner.nextLine()).equalsIgnoreCase("stop")) 
+                    {
                         writer.write(line + System.lineSeparator());
                         writer.flush();
                     }
@@ -45,20 +45,29 @@ public class RedirectAppend implements RedirectionInterface
                 }
             }
             
-            // default case: command >> file
-            else 
+        // case: >> file, handle it separately
+        if (commandOutput == null || commandOutput.trim().isEmpty()) 
+        {
+            NoCommandOutputCase(file);
+            return;
+        } 
+            
+        
+        // default case: command >> file 
+        else 
+        {
+            // check if the file exists, append if y, create and write if n
+            try (FileWriter writer = new FileWriter(file, true)) 
             {
-                try (FileWriter writer = new FileWriter(file, true))
-                {
-                    writer.write(commandOutput);
-                    System.out.println("Output appended to file: " + fileName); 
-                }
-                
-                catch (IOException e) 
-                {
-                    System.out.println("Error writing to file: " + fileName);
-                }
+                writer.write(commandOutput + System.lineSeparator());
+                System.out.println("Output appended to file: " + fileName);
+            } 
+            
+            catch (IOException e) 
+            {
+                System.out.println("Error writing to file: " + fileName + ", " + e.getMessage());
             }
         }
     }
+}
 }

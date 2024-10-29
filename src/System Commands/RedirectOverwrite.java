@@ -3,29 +3,25 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
 
-public class RedirectOverwrite implements RedirectionInterface 
+public class RedirectOverwrite extends RedirectionAbstract implements RedirectionInterface 
 {
     @Override
     public void redirectOutput(String commandOutput, String fileName) 
     { 
         //case: no argument specified
-        if (fileName == null || fileName.trim().isEmpty())
+        if (fileName == null || fileName.trim().isEmpty()) 
         {
-            System.out.println("Syntax Error: File name is required");
-            return;
+            NoFileArgumentCase();
         }
 
         else 
         {
-
             File file = new File(fileName);
             if (!file.isFile())
             {
-                System.out.println(fileName+ "is a directory");
-                return;
+                NotFileCase(fileName);
             }
-
-            
+           
             else if (commandOutput.equals("cat")) 
             {
                 System.out.println("Enter text to be written to the file: " + fileName + " (type 'stop' to finish): ");
@@ -46,7 +42,14 @@ public class RedirectOverwrite implements RedirectionInterface
                     System.out.println("Error writing to file: " + fileName + ", " + e.getMessage());
                 }
             }
+
         
+            // case: > file, handle it separately
+            if (commandOutput == null || commandOutput.trim().isEmpty()) 
+            {
+                NoCommandOutputCase(file);
+                return;
+            } 
             
             // dafault case: command > file
             else 
