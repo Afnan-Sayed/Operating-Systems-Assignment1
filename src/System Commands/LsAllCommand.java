@@ -1,4 +1,4 @@
-public class LsAllCommand implements Command{
+public class LsAllCommand implements CommandInterface{
     @Override 
     public void execute(String... args) {
     

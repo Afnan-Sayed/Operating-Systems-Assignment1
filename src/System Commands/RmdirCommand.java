@@ -1,4 +1,4 @@
-public class RmdirCommand implements Command{
+public class RmdirCommand implements CommandInterface{
     @Override 
     public void execute(String... args) {
     

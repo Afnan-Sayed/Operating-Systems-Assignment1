@@ -1,4 +1,4 @@
-public class MvCommand implements Command{
+public class MvCommand implements CommandInterface{
     @Override 
     public void execute(String... args) {
     

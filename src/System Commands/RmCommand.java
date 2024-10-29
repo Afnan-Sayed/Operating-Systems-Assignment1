@@ -1,4 +1,4 @@
-public class RmCommand implements Command{
+public class RmCommand implements CommandInterface{
     @Override 
     public void execute(String... args) {
     

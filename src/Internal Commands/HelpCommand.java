@@ -1,4 +1,4 @@
-public class HelpCommand implements Command{
+public class HelpCommand implements CommandInterface{
     @Override 
     public void execute(String... args) {
     

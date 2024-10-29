@@ -1,4 +1,4 @@
-public class TouchCommand implements Command{
+public class TouchCommand implements CommandInterface{
     @Override 
     public void execute(String... args) {
     

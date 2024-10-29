@@ -1,4 +1,4 @@
-public class MkdirCommand implements Command{
+public class MkdirCommand implements CommandInterface{
     @Override 
     public void execute(String... args) {
     

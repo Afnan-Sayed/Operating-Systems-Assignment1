@@ -1,4 +1,4 @@
-public class CdCommand implements Command{
+public class CdCommand implements CommandInterface{
     @Override 
     public void execute(String... args) {
     

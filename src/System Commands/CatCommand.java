@@ -2,7 +2,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
-public class CatCommand implements Command 
+public class CatCommand implements CommandInterface 
 {
     @Override 
     public void execute(String... args) 
@@ -14,7 +14,8 @@ public class CatCommand implements Command
             return;
         }
 
-        for (String fileName : args) {
+        for (String fileName : args) 
+        {
             File file = new File(fileName);
 
             // case no file not found  
@@ -24,16 +25,19 @@ public class CatCommand implements Command
             else if (!file.isFile())
                 System.out.println("cat: " + fileName + ": is a directory, not a file");
             
-            else {
+            else 
+            {
                 // trying to read the file content
                 try (Scanner scanner = new Scanner(file))
                 {
-                    while (scanner.hasNextLine()) {
+                    while (scanner.hasNextLine()) 
+                    {
                         System.out.println(scanner.nextLine());
                     }
                 } 
                 
-                catch (FileNotFoundException e) {
+                catch (FileNotFoundException e) 
+                {
                     System.out.println("cat: " + fileName + ": Unable to read the file");
                 } 
             }

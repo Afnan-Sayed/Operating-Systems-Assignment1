@@ -1,4 +1,4 @@
-public class PwdCommand implements Command{
+public class PwdCommand implements CommandInterface{
     @Override 
     public void execute(String... args) {
     

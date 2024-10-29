@@ -3,7 +3,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 
 
-public class LsCommand implements Command{
+public class LsCommand implements CommandInterface{
     @Override 
     public void execute(String... args) {
 
