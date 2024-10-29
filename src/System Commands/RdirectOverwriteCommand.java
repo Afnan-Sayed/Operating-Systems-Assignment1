@@ -1,4 +1,4 @@
-public class RdirectionComands implements Command{
+public class RdirectOverwriteCommand implements Command{
     @Override 
     public void execute(String... args) {
     
