@@ -1,0 +1,9 @@
+package SystemCommands;
+
+public class pwd extends CommandAbstract implements CommandInterface{
+    
+    @Override
+    public String execute(){
+        return "Current Directory: " + System.getProperty("user.dir");
+    }
+}
