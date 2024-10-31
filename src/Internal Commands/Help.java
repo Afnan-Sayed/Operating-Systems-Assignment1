@@ -1,4 +1,4 @@
-public class Help implements CommandInterface 
+public class Help implements CommandInterface
 {
     @Override
     public String execute(String... args)

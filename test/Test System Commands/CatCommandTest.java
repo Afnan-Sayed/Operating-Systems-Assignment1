@@ -1,36 +1,64 @@
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-class CatCommandTest {
-    @Test
-    void testExecuteWithFile() throws IOException 
-    {
-        CatCommand catCommand = new CatCommand();
-        String fileName = "testfile.txt";
-        
-        File testFile = new File(fileName);
-        try (FileWriter writer = new FileWriter(testFile)) 
-        {
-            writer.write("Hii\n");
-        }
-        
-        
-        String result = catCommand.execute(fileName);
-        assertEquals("Hii\n", result);
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-        testFile.delete();
+public class CatCommandTest 
+{
+
+    private CatCommand catCommand;
+
+    @BeforeEach
+    public void setUp() {
+        catCommand = new CatCommand();
     }
 
     @Test
-    void testExecuteWithMissingFile() 
+    public void testCatSingleFile() throws IOException
     {
-        CatCommand catCommand = new CatCommand();
-        String fileName = "nonexistentfile.txt";
-        
-        String result = catCommand.execute(fileName);
-        assertEquals("cat: nonexistentfile.txt: No such file or directory", result);
+        // create temp file and write content to iy
+        File tempFile = File.createTempFile("testFile", ".txt");
+        tempFile.deleteOnExit();
+        FileWriter writer = new FileWriter(tempFile);
+        writer.write("Hii \n");
+        writer.write("this is a test file\n");
+        writer.close();
+
+    
+        String[] args = {tempFile.getName()};
+        String result = catCommand.execute(args);
+        assertEquals("Hii \nthis is a test file\n", result);
+    }
+
+    @Test
+    public void testCatFileNotFound() 
+    {
+        String[] args = {"nonexistentfile.txt"};
+        String result = catCommand.execute(args);
+        assertEquals("cat: nonexistentfile.txt: No such file or directory\n", result);
+    }
+
+    @Test
+    public void testCatNoArguments() 
+    {
+        String[] args = {""}; 
+        String result = catCommand.execute(args);
+        assertEquals("Please specify at least one file. \n", result);
+    }
+
+    @Test
+    public void testCatDirectoryAsFile() throws IOException 
+    {
+        File tempDir = new File(System.getProperty("java.io.tmpdir"), "testDir");
+        tempDir.mkdir();
+        tempDir.deleteOnExit();
+
+        String[] args = {tempDir.getName()};
+        String result = catCommand.execute(args);
+        assertEquals("cat: " + tempDir.getName() + ": is a directory not a file\n", result);
     }
 }

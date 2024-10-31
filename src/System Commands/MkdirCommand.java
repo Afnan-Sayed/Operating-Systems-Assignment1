@@ -1,50 +1,40 @@
 import java.io.File;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+public class MkdirCommand implements CommandInterface{
 
 
-public class MkdirCommand implements CommandInterface
-{
-    private ArrayList<String> directoryPath;
-    public void setDirectoryPath(ArrayList<String> path)
-    {
-        directoryPath = path;
-    }
 
-    @Override 
-    public String execute(String... args) 
-    {
+
+    @Override
+    public String execute(String[] args) {
+        String[] pr = args[0].split(" ");
         String currDir = System.getProperty("user.dir");
-        if(currDir==null)
-        {
+        if(currDir==null){
             currDir = Paths.get("").toAbsolutePath().toString();
-         
         }
 
-        for(String path: directoryPath)
-        {
+        for(String path: pr){
             File directory = new File(path);
-            if(!directory.isAbsolute())
-            {
+            if(!directory.isAbsolute()){
                 directory = new File(currDir,path);
-                
             }
-
-            if(!directory.exists())
-            {
+            if(!directory.exists()){
                 boolean isCreated = directory.mkdirs();
                 if(isCreated)continue;
-                else
-                {
-                    return "Error while creating the "+directory+"\n";
+                else{
+                    return "Error while creating the "+directory ;
                 }
             }
-            else
-            {
-                return "Directory already exists \n";
+            else{
+               return "Directory already exists";
             }
         }
-        return "All directories created successfully. \n";
+        return "Directory created!";
+
     }
-    
+
 }
+
+
+

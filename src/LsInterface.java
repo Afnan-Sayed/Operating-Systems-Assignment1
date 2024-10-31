@@ -1,4 +1,4 @@
-public interface LsInterface 
+public interface LsInterface
 {
     String execute();
 }

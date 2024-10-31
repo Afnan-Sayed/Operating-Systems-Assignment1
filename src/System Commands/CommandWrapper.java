@@ -1,4 +1,4 @@
-public class CommandWrapper implements CommandInterface 
+public class CommandWrapper implements CommandInterface
 {
     private final CommandInterface command;
     private final String args;

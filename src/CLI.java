@@ -1,4 +1,8 @@
+package org.example;
+import java.util.ArrayList;
+import java.lang.StringBuilder;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -10,15 +14,26 @@ public class CLI {
         registerCommands();
     }
 
-    private void registerCommands() 
+    private void registerCommands()
     {
         // Register each command with its name and corresponding Command instance
         commandMap.put("ls", new LsHandler());
-       
+        commandMap.put("cat", new CatCommand());
+        commandMap.put("cd", new CdCommand());
+        commandMap.put("pwd", new PwdCommand());
+        commandMap.put("help", new Help());
+        commandMap.put("exit", new ExitCommand());
+        commandMap.put("mkdir", new MkdirCommand());
+        commandMap.put("rmdir", new RmdirCommand());
+        commandMap.put("mv", new MvCommand());
+        commandMap.put("touch", new TouchCommand());
+        commandMap.put("rm",new RmCommand());
+
         // Add additional commands as needed
     }
 
-    public void run() {
+    public void run()
+    {
         Scanner scanner = new Scanner(System.in);
         while (true) {
             System.out.print("> "); // Command prompt
@@ -28,9 +43,76 @@ public class CLI {
                 continue; // Skip if the input is empty
             }
 
-            if (input.contains("|")) {
+            if (input.contains("|"))
+            {
                 handlePipedCommands(input);
-            } else {
+            }
+
+            else if (input.contains(">>" ) || input.contains(">"))
+            {
+                System.out.print("444444 ");
+                String[] parts = input.split(" ");
+
+                List<String> parsedParts = new ArrayList<>();
+                StringBuilder currentPart = new StringBuilder();
+
+                for (String part : parts)
+                {
+                    if (part.equals(">>") || part.equals(">"))
+                    {
+                        // Add current part as argument (e.g., Asmaa.txt) before >> if it exists
+                        if (currentPart.length() > 0)
+                        {
+                            parsedParts.add(currentPart.toString());
+                            currentPart.setLength(0); // Clear currentPart for next input
+                        }
+
+                    }
+
+                    else
+                    {
+                        if (currentPart.length() > 0)
+                        {
+                            currentPart.append(" ");
+                        }
+                        currentPart.append(part);
+                    }
+                    //"cat Asmaa.txt >> file1"
+                }
+
+                /**
+                 *  for(String s : parsedParts) {
+                 *                     System.out.println(s);
+                 *
+                 *                 }
+                 */
+
+
+
+
+
+
+                String cmdName = parts[0];
+                CommandInterface command = commandMap.get(cmdName);
+                 // ["cat Asmaa.txt",  "file1"];
+                String[] cmdArgs = new String[parts.length - 1];
+                System.arraycopy(parts, 1, cmdArgs, 0, parts.length - 1);
+
+
+                if(input.contains(">>"))
+                {
+                    RedirectAppend append = new RedirectAppend();
+                    append.redirectOutput(command.execute(cmdArgs), currentPart.toString());
+                }
+
+                else
+                {
+                    RedirectOverwrite overwrite = new RedirectOverwrite();
+                    overwrite.redirectOutput(command.execute(cmdArgs), currentPart.toString());
+                }
+
+            }
+            else {
                 handleSingleCommand(input);
             }
         }
@@ -65,12 +147,22 @@ public class CLI {
         // Parse the command name and arguments
         String[] parts = input.trim().split(" ", 2);
         String cmdName = parts[0];
-        String cmdArgs = parts.length > 1 ? parts[1] : "";
+        String cmdArgs =  parts.length > 1 ? parts[1] : "";
+        /**
+         * String[] cmdArgs = new String[0];
+        if (parts.length > 1) {
+            // Split the second part by spaces to get individual arguments
+            cmdArgs = parts[1].split(" ");
+        }
+        **/
+
 
         // Look up the command in the command map
         CommandInterface command = commandMap.get(cmdName);
         if (command != null) {
             // Execute the command and print its output
+
+
             System.out.println(command.execute(cmdArgs));
         } else {
             System.out.println("Unknown command: " + cmdName);

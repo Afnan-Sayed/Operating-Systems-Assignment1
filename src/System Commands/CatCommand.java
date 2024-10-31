@@ -5,44 +5,62 @@ import java.util.Scanner;
 public class CatCommand implements CommandInterface 
 {
     @Override 
-    public String execute(String... args)
+    public String execute(String[] args)
     {
+
+        String[] pr = args[0].split(" ");
+
+
         // case no arguments specified 
-        if (args.length == 0) 
+        if (pr.length == 0)
         {
             return "Please specify at least one file. \n";
         }
+        File baseDir = new File(System.getProperty("user.dir"));
+        StringBuilder result = new StringBuilder();
 
-        for (String fileName : args) 
+
+        for (String fileName : pr)
         {
-            File file = new File(fileName);
+            File file = new File(baseDir,fileName);
 
-            // case no file not found  
-            if (!file.exists()) 
-                return "cat: " + fileName + ": No such file or directory";
-            
-            else if (!file.isFile())
-                return "cat: " + fileName + ": is a directory, not a file";
-            
+            // case no file not found
+            if (file.isDirectory())
+            {
+                // Change the base directory to this directory
+                baseDir = file;
+                result.append("Changed directory to: ").append(file.getPath()).append("\n");
+                continue;
+            }
+            if (!file.exists()) {
+                result.append("cat: ").append(fileName).append(": No such file or directory\n");
+                continue;
+                // Move to the next file
+            }
+            else if (!file.isFile()){
+                result.append("cat: ").append(fileName).append(": is a directory, not a file\n");
+            continue;
+            // Move to the next file
+        }
             else 
             {
                 // trying to read the file content
                 try (Scanner scanner = new Scanner(file))
                 {
-                    String str=null;
+
                     while (scanner.hasNextLine()) 
                     {
-                        str+= scanner.nextLine()+"\n";
+                        result.append(scanner.nextLine()).append("\n");
                     }
-                    return str;
-                } 
-                
-                catch (FileNotFoundException e) 
+
+
+                }
+                catch (FileNotFoundException e)
                 {
-                    return "cat: " + fileName + ": Unable to read the file";
-                } 
+                    result.append("cat: ").append(fileName).append(": Unable to read the file\n");
+                }
             }
         }
-        return null;
+        return result.toString();
     }
 }

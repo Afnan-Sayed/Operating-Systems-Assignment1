@@ -4,18 +4,21 @@ import java.nio.file.Paths;
 public class CdCommand implements CommandInterface
 {
     private String path;
-    public  void setPath(String path)
+    /**
+     * public  void setPath(String path)
     {
         this.path = path.trim();
     }
+    ***/
 
     @Override 
-    public String execute(String... args) 
+    public String execute(String... path)
     {
+        this.path = path[0];
         String currentDir = System.getProperty("user.dir");
         File targetDir;
 
-        if(path.equals(".."))
+        if(path[0].equals(".."))
         {
             targetDir = new File(currentDir).getParentFile();
             if(targetDir==null)
@@ -25,7 +28,7 @@ public class CdCommand implements CommandInterface
         }
         else
         {
-            targetDir = new File(path);
+            targetDir = new File(this.path);
             if(!targetDir.isAbsolute()){
                 targetDir = Paths.get(currentDir,path).toFile();
             }
