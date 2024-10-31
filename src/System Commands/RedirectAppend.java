@@ -1,3 +1,6 @@
+package org.example;
+
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -26,19 +29,28 @@ public class RedirectAppend extends RedirectionAbstract implements RedirectionIn
             else if (commandOutput.equals("cat")) 
             {
                 System.out.println("Enter text to be written to the file: " + fileName + " (type 'stop' to finish): ");
-                
+                StringBuilder inputText = new StringBuilder();
+
                 //the following will automatically append if the file exists or creates it in case it does not exist
-                try (Scanner scanner = new Scanner(System.in);
-                     FileWriter writer = new FileWriter(file, true))
+                try (Scanner scanner = new Scanner(System.in))
                 {
                     String line;
                     while (!(line = scanner.nextLine()).equalsIgnoreCase("stop")) 
                     {
-                        writer.write(line + System.lineSeparator());
-                        writer.flush();
+                        if (inputText.length() > 0) {
+                            inputText.append(System.lineSeparator());
+                        }
+                        inputText.append(line);
                     }
                 }
-                
+
+                try (FileWriter writer = new FileWriter(file, true))
+                {
+                    if (inputText.length() > 0) {
+                        writer.write(inputText.toString());
+                    }
+                    writer.flush();
+                }
                 catch (IOException e) 
                 {
                     System.out.println("Error writing to file: " + fileName + ", " + e.getMessage());

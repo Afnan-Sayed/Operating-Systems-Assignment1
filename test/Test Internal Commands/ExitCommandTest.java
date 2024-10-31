@@ -1,10 +1,14 @@
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+package org.example;
 
-class ExitCommandTest {
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+
+class ExitCommandTest
+{
     @Test
-    void testExecute() {
+    void testExecute()
+    {
         ExitCommand exitCommand = new ExitCommand();
-        assertEquals(null, exitCommand.execute()); 
+        assertEquals("Exiting...", exitCommand.execute());
     }
 }

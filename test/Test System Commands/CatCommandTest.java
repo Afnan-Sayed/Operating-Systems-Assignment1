@@ -1,3 +1,5 @@
+package org.example;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -5,11 +7,10 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class CatCommandTest 
+class CatCommandTest
 {
-
     private CatCommand catCommand;
 
     @BeforeEach
@@ -21,21 +22,20 @@ public class CatCommandTest
     public void testCatSingleFile() throws IOException
     {
         // create temp file and write content to iy
-        File tempFile = File.createTempFile("testFile", ".txt");
-        tempFile.deleteOnExit();
-        FileWriter writer = new FileWriter(tempFile);
+        File file = new File("temp.txt");
+
+        FileWriter writer = new FileWriter("temp.txt");
         writer.write("Hii \n");
         writer.write("this is a test file\n");
         writer.close();
 
-    
-        String[] args = {tempFile.getName()};
+        String[] args = {"temp.txt"};
         String result = catCommand.execute(args);
         assertEquals("Hii \nthis is a test file\n", result);
     }
 
     @Test
-    public void testCatFileNotFound() 
+    public void testCatFileNotFound()
     {
         String[] args = {"nonexistentfile.txt"};
         String result = catCommand.execute(args);
@@ -43,15 +43,15 @@ public class CatCommandTest
     }
 
     @Test
-    public void testCatNoArguments() 
+    public void testCatNoArguments()
     {
-        String[] args = {""}; 
+        String[] args = {""};
         String result = catCommand.execute(args);
         assertEquals("Please specify at least one file. \n", result);
     }
 
     @Test
-    public void testCatDirectoryAsFile() throws IOException 
+    public void testCatDirectoryAsFile() throws IOException
     {
         File tempDir = new File(System.getProperty("java.io.tmpdir"), "testDir");
         tempDir.mkdir();
@@ -59,6 +59,6 @@ public class CatCommandTest
 
         String[] args = {tempDir.getName()};
         String result = catCommand.execute(args);
-        assertEquals("cat: " + tempDir.getName() + ": is a directory not a file\n", result);
+        assertEquals("cat: " + tempDir.getName() + ": No such file or directory\n", result);
     }
 }

@@ -1,6 +1,11 @@
+package org.example;
+
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.Arrays;
+import java.util.Objects;
 import java.util.Scanner;
+
 
 public class CatCommand implements CommandInterface 
 {
@@ -10,12 +15,13 @@ public class CatCommand implements CommandInterface
 
         String[] pr = args[0].split(" ");
 
-
         // case no arguments specified 
-        if (pr.length == 0)
+        if (pr.length ==0)
         {
             return "Please specify at least one file. \n";
         }
+
+
         File baseDir = new File(System.getProperty("user.dir"));
         StringBuilder result = new StringBuilder();
 
@@ -25,13 +31,7 @@ public class CatCommand implements CommandInterface
             File file = new File(baseDir,fileName);
 
             // case no file not found
-            if (file.isDirectory())
-            {
-                // Change the base directory to this directory
-                baseDir = file;
-                result.append("Changed directory to: ").append(file.getPath()).append("\n");
-                continue;
-            }
+
             if (!file.exists()) {
                 result.append("cat: ").append(fileName).append(": No such file or directory\n");
                 continue;
@@ -50,7 +50,7 @@ public class CatCommand implements CommandInterface
 
                     while (scanner.hasNextLine()) 
                     {
-                        result.append(scanner.nextLine()).append("\n");
+                        result.append(scanner.nextLine()).append(" ");
                     }
 
 

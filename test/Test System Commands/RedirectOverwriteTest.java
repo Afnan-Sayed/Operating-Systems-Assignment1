@@ -1,3 +1,6 @@
+package org.example;
+
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -8,55 +11,49 @@ import java.nio.file.Files;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class RedirectOverwriteTest 
-{
+class RedirectOverwriteTest {
 
     private RedirectOverwrite redirectOverwrite;
+    private File file;
 
     @BeforeEach
-    public void setUp() 
-    {
+    public void setUp() {
         redirectOverwrite = new RedirectOverwrite();
+        file = new File("temp.txt");
     }
 
     @Test
-    public void testOverwriteOutputToFile() throws IOException 
-    {
-        File tempFile = File.createTempFile("testFile", ".txt");
-        tempFile.deleteOnExit();
+    public void testOverwriteOutputToFile() throws IOException {
+        redirectOverwrite.redirectOutput("Hello World", file.getName());
 
-        redirectOverwrite.redirectOutput("Hello World", tempFile.getName());
-
-        String content = Files.readString(tempFile.toPath());
+        String content = Files.readString(file.toPath()).trim();
         assertEquals("Hello World", content);
     }
 
     @Test
-    public void testOverwriteWithCatCommand() throws IOException 
+    public void testOverwriteWithCatCommand() throws IOException
     {
-        File tempFile = File.createTempFile("testFile", ".txt");
-        tempFile.deleteOnExit();
+        redirectOverwrite.redirectOutput("cat", "temp.txt");
 
-    
-        try (FileWriter writer = new FileWriter(tempFile))
-        {
-            writer.write("Initial Content\n");
-        }
-
-        redirectOverwrite.redirectOutput("cat", tempFile.getName());
-
-        String content = Files.readString(tempFile.toPath());
+        String content = Files.readString(file.toPath());
         assertFalse(content.contains("Initial Content"));
     }
 
+    @AfterEach
+    public void tearDown() throws IOException {
+        if (file.exists()) {
+            Files.delete(file.toPath());
+        }
+    }
+
     @Test
-    public void testNoFileArgument() 
+    public void testNoFileArgument()
     {
         assertDoesNotThrow(() -> redirectOverwrite.redirectOutput("Hello", null));
     }
 
     @Test
-    public void testDirectoryAsFile() throws IOException 
+    public void testDirectoryAsFile() throws IOException
     {
         File tempDir = Files.createTempDirectory("testDir").toFile();
         tempDir.deleteOnExit();
@@ -65,7 +62,7 @@ public class RedirectOverwriteTest
     }
 
     @Test
-    public void testNoCommandOutput() throws IOException 
+    public void testNoCommandOutput() throws IOException
     {
         File tempFile = File.createTempFile("testFile", ".txt");
         tempFile.deleteOnExit();

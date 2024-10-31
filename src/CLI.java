@@ -50,7 +50,6 @@ public class CLI {
 
             else if (input.contains(">>" ) || input.contains(">"))
             {
-                System.out.print("444444 ");
                 String[] parts = input.split(" ");
 
                 List<String> parsedParts = new ArrayList<>();
